@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const PORT = 3001
+app.use(express.json())
 
 let persons = 
 [
@@ -53,6 +54,25 @@ app.delete('/api/persons/:id', (request, response) => {
     })
 
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const id = Math.random() * 100
+    const body = request.body
+
+    if(!body.name || !body.number){
+        return response.status(400).json({
+            error: "name or number is missing"
+        })
+    }
+    const personObject = {
+        name : body.name,
+        number : body.number,
+        id: id.toString(),
+    }
+
+    persons = persons.concat(personObject)
+    response.json(personObject)
 })
 
 app.get('/info', (request, response) => {
