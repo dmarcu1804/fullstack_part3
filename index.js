@@ -34,6 +34,17 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = persons.find(person => person.id === id)
+
+    if(person){
+        response.json(person)
+    }else{
+        response.status(404).send("The ID entered does not exist").end()
+    }
+})
+
 app.get('/info', (request, response) => {
     response.send(`<p> This Page has info for ${persons.length} people </p> <br/> ${new Date()}`)
 })
