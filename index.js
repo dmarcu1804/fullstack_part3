@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 const PORT = 3001
 const morgan = require('morgan')
+const cors = require('cors')
+
+app.use(cors())
 
 app.use(express.json())
 morgan.token('person', (request) => {
@@ -37,7 +40,12 @@ let persons =
       "id": "4",
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122"
-    }
+    },
+    { 
+        "id": "5",
+        "name": "testing", 
+        "number": "3333"
+      }
 ]
 
 app.get('/', (request, response) => {
