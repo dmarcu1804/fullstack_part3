@@ -18,6 +18,7 @@ morgan.token('person', (request) => {
 const customFormat = ':method :url :status :res[content-length] - :response-time ms :person'
 app.use(morgan(customFormat))
 
+app.use(express.static('dist'))
 
 let persons = 
 [
