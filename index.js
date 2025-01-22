@@ -3,6 +3,7 @@ const app = express()
 const PORT = process.env.PORT || 3001
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/personDB')
 
 app.use(cors())
 
@@ -54,7 +55,11 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({})
+          .then(persons => {
+            response.json(persons)
+          })
+    //response.json(persons)
 })
 
 app.get('/api/persons/:id', (request, response) => {
