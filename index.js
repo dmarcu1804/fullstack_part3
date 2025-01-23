@@ -59,33 +59,27 @@ app.get('/api/persons', (request, response) => {
           .then(persons => {
             response.json(persons)
           })
-    //response.json(persons)
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
 
     Person.findById(id)
           .then(person => {
             response.json(person)
           })
-    // const person = persons.find(person => person.id === id)
-
-    // if(person){
-    //     response.json(person)
-    // }else{
-    //     response.status(404).send("The ID entered does not exist").end()
-    // }
+          .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
-    persons = persons.filter((person) => {
-        //console.log(person.id !== id)
-        return person.id !== id
-    })
 
-    response.status(204).end()
+    Person.findByIdAndDelete(id)
+          .then(result => {
+            console.log(result)
+            response.status(204).end()
+          })
+          .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -98,13 +92,6 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    // const existingName = persons.find(person => person.name === body.name)
-    // if(existingName){
-    //     return response.status(400).json({
-    //         error: "name is already in the phonebook"
-    //     })
-    // }
-
     const personObject = new Person({
         name : body.name,
         number : body.number,
@@ -114,13 +101,23 @@ app.post('/api/persons', (request, response) => {
                 .then(savedPerson => {
                     response.json(savedPerson)
                 })
-    //persons = persons.concat(personObject)
-    //response.json(personObject)
 })
 
 app.get('/info', (request, response) => {
     response.send(`<p> This Page has info for ${persons.length} people </p> <br/> ${new Date()}`)
 })
+
+const errorHandler = (error, request, response, next) => {
+    console.log(error.message)
+
+    if(error.name === 'CastError'){
+        return response.status(400).send({ error: 'malformatted id'})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 })
