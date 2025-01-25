@@ -103,6 +103,24 @@ app.post('/api/persons', (request, response) => {
                 })
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+  const personNameExists = Person.exists({name: body.name})
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  if(personNameExists){
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+  }
+}) 
+
 app.get('/info', (request, response) => {
     response.send(`<p> This Page has info for ${persons.length} people </p> <br/> ${new Date()}`)
 })
