@@ -4,16 +4,16 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-const personName = process.argv[2]
-const personNumber = process.argv[3]
+// const personName = process.argv[2]
+// const personNumber = process.argv[3]
 
 const url = process.env.MONGODB_URI
 
 console.log('connecting to', url)
 
 mongoose.connect(url)
-    .then(result => {
-        console.log("connected to MongoDB")
+    .then(() => {
+        console.log('connected to MongoDB')
     })
     .catch(error => {
         console.log('error connecting to MongoDB', error.message)
